@@ -1,0 +1,133 @@
+package com.hamza.tele.teledrop.data.api
+
+import okhttp3.MultipartBody
+import okhttp3.ResponseBody
+import retrofit2.Response
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.Url
+
+interface TelegramApiService {
+
+    @GET
+    suspend fun getMe(@Url url: String): Response<GetMeResponse>
+
+    @GET
+    suspend fun getUpdates(
+        @Url url: String,
+        @Query("offset") offset: Int? = null
+    ): Response<GetUpdatesResponse>
+
+    @Multipart
+    @POST
+    suspend fun sendPhoto(
+        @Url url: String,
+        @Part("chat_id") chatId: okhttp3.RequestBody,
+        @Part photo: MultipartBody.Part,
+        @Part("caption") caption: okhttp3.RequestBody? = null
+    ): Response<ResponseBody>
+
+    @Multipart
+    @POST
+    suspend fun sendVideo(
+        @Url url: String,
+        @Part("chat_id") chatId: okhttp3.RequestBody,
+        @Part video: MultipartBody.Part,
+        @Part("caption") caption: okhttp3.RequestBody? = null
+    ): Response<ResponseBody>
+    
+    // For general files or backup
+    @Multipart
+    @POST
+    suspend fun sendDocument(
+        @Url url: String,
+        @Part("chat_id") chatId: okhttp3.RequestBody,
+        @Part document: MultipartBody.Part,
+        @Part("caption") caption: okhttp3.RequestBody? = null
+    ): Response<ResponseBody>
+    
+    // For sending text messages (notifications)
+    @FormUrlEncoded
+    @POST
+    suspend fun sendMessage(
+        @Url url: String,
+        @Field("chat_id") chatId: String,
+        @Field("text") text: String,
+        @Field("parse_mode") parseMode: String = "HTML",
+        @Field("message_thread_id") messageThreadId: Int? = null,
+        @Field("disable_web_page_preview") disableWebPagePreview: Boolean? = null
+    ): Response<SendMessageResponse>
+    
+    // For creating forum topics (threads) in supergroups
+    @FormUrlEncoded
+    @POST
+    suspend fun createForumTopic(
+        @Url url: String,
+        @Field("chat_id") chatId: String,
+        @Field("name") name: String,
+        @Field("icon_custom_emoji_id") iconCustomEmojiId: String? = null
+    ): Response<CreateForumTopicResponse>
+}
+
+// Helper function to build URLs
+fun buildTelegramUrl(token: String, method: String): String {
+    return "https://api.telegram.org/bot$token/$method"
+}
+
+// Minimal response classes for GetUpdates
+data class GetUpdatesResponse(
+    val ok: Boolean,
+    val result: List<UpdateResult>
+)
+
+data class GetMeResponse(
+    val ok: Boolean,
+    val result: User
+)
+
+data class UpdateResult(
+    val update_id: Int,
+    val message: Message?
+)
+
+data class Message(
+    val message_id: Int,
+    val from: User?,
+    val chat: Chat,
+    val text: String?
+)
+
+data class User(
+    val id: Long,
+    val is_bot: Boolean,
+    val first_name: String,
+    val username: String?
+)
+
+data class Chat(
+    val id: Long,
+    val type: String
+)
+
+data class SendMessageResponse(
+    val ok: Boolean,
+    val result: Message?
+)
+
+data class CreateForumTopicResponse(
+    val ok: Boolean,
+    val result: ForumTopic?
+)
+
+data class ForumTopic(
+    val message_thread_id: Int,
+    val name: String,
+    val icon_color: Int?,
+    val icon_custom_emoji_id: String?
+)
