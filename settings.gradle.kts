@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TeleDrop"
+rootProject.name = "Iris Gallery"
 include(":app")
  

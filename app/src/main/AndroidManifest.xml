@@ -94,7 +94,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
-        android:theme="@style/Theme.TeleDrop">
+        android:theme="@style/Theme.IrisGallery">
 
         <activity
             android:name="com.iris.gallery.MainActivity"
