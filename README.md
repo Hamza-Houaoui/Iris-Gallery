@@ -12,7 +12,7 @@ Iris Gallery is an Android app for browsing, organizing, and editing photos and 
 
 ## Privacy
 
-The gallery is designed to work with media on your device. Telegram features are optional and require you to configure a bot; media is sent to Telegram only when you use those features. The app includes network access for Telegram integration, so it is not strictly offline-only.
+The gallery is designed to work with media on your device. Telegram features are optional and require you to configure a bot; only media you share or include in an enabled Telegram sync is sent. The app includes network access for Telegram integration, so it is not strictly offline-only.
 
 ## Tech stack
 
